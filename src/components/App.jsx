@@ -20,8 +20,8 @@ export const App = () => {
       return;
     }
 
-    try {
-      fetchPixabay(query, page).then(({ hits, totalHits }) => {
+    fetchPixabay(query, page)
+      .then(({ hits, totalHits }) => {
         if (hits.length === 0) {
           return toast.info(
             'Sorry, there are no images matching your search query. Please try again.'
@@ -31,14 +31,13 @@ export const App = () => {
         //в useState записываем новые значения:
         setImages(prev => [...prev, ...hits]); //в массив images распыляем фото которые уже были в prev плюс которые пришли после fetchPixabay
         setShowBtn(page < Math.ceil(totalHits / 12)); //если проверка приводит к true - в setShowBtn записываем true. Будет использовано для показа (или не показа) кнопки "Load More"
-      });
-    } catch (error) {
-      toast.error(
-        'Oops! Something went wrong. Please, try reloading the page.'
-      );
-    } finally {
-      setLoading(false); //в любом случае переводим состояние лоадера в false, чтобы он больше не отображался
-    }
+      })
+      .catch(error =>
+        toast.error(
+          'Oops! Something went wrong. Please, try reloading the page.'
+        )
+      )
+      .finally(() => setLoading(false)); //в любом случае переводим состояние лоадера в false, чтобы он больше не отображался)
   }, [page, query]);
 
   const handleSearchSubmit = searchQuery => {
